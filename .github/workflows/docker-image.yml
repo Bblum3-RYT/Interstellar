@@ -1,0 +1,51 @@
+Created by <@726162926851063919>, Edited by <@808195996680585217> 
+# How to make a Docker Image
+1. [Signup](https://hub.docker.com/signup) for Docker, or Sign in
+2. Go to https://hub.docker.com/settings/security
+3. Click New Access Token, Type Anything, then click Generate.
+4. Copy and Close (This will be your DOCKERHUB_TOKEN)
+5. Go to https://hub.docker.com/repositories/
+6. Create a Public Repository
+7. Enter a Repo name and click Createe (This will be your DOCKERHUB_NAME)
+# Github Steps
+1. Signup for Github if you haven't already
+2. Visit https://github.com/InterstellarNetwork/Interstellar/fork, and click Create Fork
+3. Click Settings or "..." on Mobile.
+4. Scroll down and click "Secrets and Variables", then click "Actions"
+5. Click New Repository Secret
+6. Create DOCKERHUB_TOKEN (This is the token you saved earlier.)
+7. Create DOCKERHUB_USERNAME (This is the username of your Docker account.)
+8. Create DOCKERHUB_NAME (This is your repository name on Docker)
+9. Go to the top of your screen and click Actions, in between Pull Requests & Projects.
+10. Click Configure under Docker Image
+11. Remove all of the code in the box and replace it with this.
+```name: Publish image to Docker Hub
+
+on:
+  [workflow_dispatch]
+
+jobs:
+  publish_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: build
+        run: |
+          docker build . -t ${{ secrets.DOCKERHUB_USERNAME}}/${{ secrets.DOCKERHUB_NAME}}:latest
+      - name: publish
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME}} -p ${{ secrets.DOCKERHUB_TOKEN}}
+          docker push ${{ secrets.DOCKERHUB_USERNAME}}/${{ secrets.DOCKERHUB_NAME}}:latest```
+
+
+12. Click commit changes, then click commit changes again.
+13. Go back to the actions tab
+14. Click "Publish image" underneath "All workflows"
+15. Click Run workflow, then click it again.
+16. Click "All workflows" and wait for the circle to go from yellow to green.
+# Notes
+Notes:
+A. If you're on mobile, make sure the code is formatted and not all one line or it won't work.
+
+B. If you want to make another docker repo, follow the same steps and put the new docker name in the Secrets tab.
